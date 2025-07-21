@@ -1,3 +1,4 @@
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f0fdf4;
@@ -32,6 +33,7 @@ h1 {
   font-size: 1.2rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(46, 125, 50, 0.1);
 }
 
 .materia:hover {
@@ -42,4 +44,14 @@ h1 {
   background-color: #c8e6c9;
   text-decoration: line-through;
   color: #388e3c;
+  font-weight: bold;
+}
+
+.bloqueada {
+  background-color: #eeeeee;
+  color: #888888;
+  border: 2px dashed #cccccc;
+  cursor: not-allowed;
+  text-decoration: none;
+  font-style: italic;
 }
