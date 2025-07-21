@@ -1,57 +1,142 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Plan de Estudio - Ciencias de la Computación</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Plan de Estudio - Ciencias de la Computación</h1>
-  <div class="grid" id="plan">
-    <div class="materia" data-id="intro">Introducción a la Programación</div>
-    <div class="materia" data-id="algebra">Álgebra</div>
-    <div class="materia" data-id="analisis1">Análisis Matemático I</div>
-    <div class="materia" data-id="arqui">Arquitectura de Computadoras</div>
-    <div class="materia bloqueada" data-id="estructuras" data-correlativas="intro">Estructuras de Datos</div>
-    <div class="materia" data-id="bd">Bases de Datos</div>
-    <div class="materia" data-id="logica">Lógica</div>
-    <div class="materia bloqueada" data-id="paradigmas" data-correlativas="estructuras">Paradigmas de Programación</div>
-    <div class="materia bloqueada" data-id="so" data-correlativas="estructuras">Sistemas Operativos</div>
-    <div class="materia" data-id="teoria">Teoría de la Computación</div>
-    <div class="materia" data-id="analisis2">Análisis Matemático II</div>
-    <div class="materia" data-id="redes">Redes de Computadoras</div>
-    <div class="materia bloqueada" data-id="compiladores" data-correlativas="paradigmas">Compiladores</div>
-    <div class="materia bloqueada" data-id="ia" data-correlativas="paradigmas">Inteligencia Artificial</div>
-    <div class="materia" data-id="ingenieria">Ingeniería de Software</div>
+  <h1>✨Plan de Estudio - Ciencias de la Computación✨</h1>
+
+  <div class="plan-estudio">
+    <!-- materias sin correlativas -->
+    <div class="columna">
+      <div class="materia" data-id="ip">Introducción a la Programación</div>
+      <div class="materia" data-id="algebra">Álgebra I</div>
+      <div class="materia" data-id="analisis1">Análisis I</div>
+      <div class="materia" data-id="sociedad">Seminario sobre Tecnología y Sociedad</div>
+      <div class="materia" data-id="optativas">Optativas</div>
+    </div>
+
+    <!-- Columna 2: materias con correlativas nivel 1 -->
+    <div class="columna">
+      <div class="materia bloqueada" data-id="aed" data-correlativas="ip,algebra">Algoritmos y Estructuras de Datos (AED)</div>
+      <div class="materia bloqueada" data-id="sd" data-correlativas="ip">Sistemas Digitales (SD)</div>
+      <div class="materia bloqueada" data-id="algebra-lineal" data-correlativas="aed">Álgebra Lineal Computacional</div>
+    </div>
+
+    <!-- Columna 3: materias con correlativas nivel 2 -->
+    <div class="columna">
+      <div class="materia bloqueada" data-id="aoc" data-correlativas="sd">Arquitectura y Organización de Computadores (AOC)</div>
+      <div class="materia bloqueada" data-id="tda" data-correlativas="aed">Técnicas de Diseño de Algoritmos (TDA)</div>
+      <div class="materia bloqueada" data-id="pp" data-correlativas="aed">Paradigmas de Programación (PP)</div>
+      <div class="materia bloqueada" data-id="lfac" data-correlativas="aed">Lenguajes Formales, Autómatas y Computabilidad (LFAC)</div>
+    </div>
+    
+
+    <!-- Columna 4: materias con correlativas nivel 3 y más -->
+    <div class="columna">
+      <div class="materia bloqueada" data-id="is" data-correlativas="pp">Ingeniería de Software (IS)</div>
+      
+      <div class="materia bloqueada" data-id="complejidad" data-correlativas="tda,lfac">Complejidad Computacional</div>
+      <div class="materia bloqueada" data-id="so" data-correlativas="aoc">Sistemas Operativos (SO)</div>
+      <div class="materia bloqueada" data-id="ec" data-correlativas="aoc,analisis1">Estadística Computacional (EC)</div>
+      <div class="materia bloqueada" data-id="redes" data-correlativas="so,tda,ec">Redes (...) y Cómputo Distribuido</div>
+      <div class="materia bloqueada" data-id="concurrente" data-correlativas="so,pp">Programación Concurrente y Paralela</div>
+      <div class="materia bloqueada" data-id="ari" data-correlativas="is">Almacenamiento y Recuperación de la Información</div>
+    </div>
+
+    <div class="materia tesis bloqueada" data-id="tesis" data-correlativas="optativas,sociedad,redes,concurrente,ari,complejidad">📝 Tesis de Licenciatura</div>
+
+    
+    
   </div>
 
   <script>
-    const materias = document.querySelectorAll('.materia');
+        const materias = document.querySelectorAll('.materia');
+        const tesis = document.querySelector('.materia.tesis');
 
-    function actualizarEstado() {
-      materias.forEach(m => {
-        const correlativas = m.dataset.correlativas;
-        if (correlativas) {
-          const requisitos = correlativas.split(',');
-          const habilitada = requisitos.every(reqId => {
-            const req = document.querySelector(`.materia[data-id="${reqId}"]`);
-            return req && req.classList.contains('completada');
+        function guardarEstado() {
+          const estado = {};
+          materias.forEach(m => {
+            estado[m.dataset.id] = m.classList.contains('completada');
           });
-          if (habilitada) {
-            m.classList.remove('bloqueada');
+          localStorage.setItem('estadoMaterias', JSON.stringify(estado));
+        }
+
+        function cargarEstado() {
+          const estadoStr = localStorage.getItem('estadoMaterias');
+          if (!estadoStr) return;
+          const estado = JSON.parse(estadoStr);
+          materias.forEach(m => {
+            if (estado[m.dataset.id]) {
+              m.classList.add('completada');
+            } else {
+              m.classList.remove('completada');
+            }
+          });
+        }
+
+        function actualizarEstado() {
+          materias.forEach(m => {
+            const correlativas = m.dataset.correlativas;
+            if (correlativas) {
+              const requisitos = correlativas.split(',').map(id => id.trim());
+              const habilitada = requisitos.every(reqId => {
+                const req = document.querySelector(`.materia[data-id="${reqId}"]`);
+                return req && req.classList.contains('completada');
+              });
+              if (habilitada) {
+                m.classList.remove('bloqueada');
+              } else {
+                m.classList.add('bloqueada');
+                m.classList.remove('completada');
+              }
+            }
+          });
+
+          // Si tesis está completada, lanzar confeti
+          if (tesis.classList.contains('completada')) {
+            lanzarConfeti();
           }
         }
-      });
-    }
 
-    materias.forEach(m => {
-      m.addEventListener('click', () => {
-        if (m.classList.contains('bloqueada')) return;
-        m.classList.toggle('completada');
+        materias.forEach(m => {
+          m.addEventListener('click', () => {
+            if (m.classList.contains('bloqueada')) return;
+            m.classList.toggle('completada');
+            actualizarEstado();
+            guardarEstado();
+          });
+        });
+
+        cargarEstado();
         actualizarEstado();
-      });
-    });
+
+        // Función lanzarConfeti (como te pasé antes)
+        function lanzarConfeti() {
+          if (document.querySelector('.confeti')) return;
+
+          const confetiContainer = document.createElement('div');
+          confetiContainer.classList.add('confeti');
+          document.body.appendChild(confetiContainer);
+
+          for (let i = 0; i < 100; i++) {
+            const confeti = document.createElement('div');
+            confeti.classList.add('confeti-piece');
+            confeti.style.left = Math.random() * 100 + 'vw';
+            confeti.style.animationDelay = (Math.random() * 3) + 's';
+            confeti.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
+            confetiContainer.appendChild(confeti);
+          }
+
+          setTimeout(() => {
+            confetiContainer.remove();
+          }, 5000);
+        }
+
+
   </script>
 </body>
 </html>
