@@ -9,26 +9,47 @@
 <body>
   <h1>Plan de Estudio - Ciencias de la Computación</h1>
   <div class="grid" id="plan">
-    <div class="materia">Introducción a la Programación</div>
-    <div class="materia">Álgebra</div>
-    <div class="materia">Análisis Matemático I</div>
-    <div class="materia">Arquitectura de Computadoras</div>
-    <div class="materia">Estructuras de Datos</div>
-    <div class="materia">Bases de Datos</div>
-    <div class="materia">Lógica</div>
-    <div class="materia">Paradigmas de Programación</div>
-    <div class="materia">Sistemas Operativos</div>
-    <div class="materia">Teoría de la Computación</div>
-    <div class="materia">Análisis Matemático II</div>
-    <div class="materia">Redes de Computadoras</div>
-    <div class="materia">Compiladores</div>
-    <div class="materia">Inteligencia Artificial</div>
-    <div class="materia">Ingeniería de Software</div>
+    <div class="materia" data-id="intro">Introducción a la Programación</div>
+    <div class="materia" data-id="algebra">Álgebra</div>
+    <div class="materia" data-id="analisis1">Análisis Matemático I</div>
+    <div class="materia" data-id="arqui">Arquitectura de Computadoras</div>
+    <div class="materia bloqueada" data-id="estructuras" data-correlativas="intro">Estructuras de Datos</div>
+    <div class="materia" data-id="bd">Bases de Datos</div>
+    <div class="materia" data-id="logica">Lógica</div>
+    <div class="materia bloqueada" data-id="paradigmas" data-correlativas="estructuras">Paradigmas de Programación</div>
+    <div class="materia bloqueada" data-id="so" data-correlativas="estructuras">Sistemas Operativos</div>
+    <div class="materia" data-id="teoria">Teoría de la Computación</div>
+    <div class="materia" data-id="analisis2">Análisis Matemático II</div>
+    <div class="materia" data-id="redes">Redes de Computadoras</div>
+    <div class="materia bloqueada" data-id="compiladores" data-correlativas="paradigmas">Compiladores</div>
+    <div class="materia bloqueada" data-id="ia" data-correlativas="paradigmas">Inteligencia Artificial</div>
+    <div class="materia" data-id="ingenieria">Ingeniería de Software</div>
   </div>
+
   <script>
-    document.querySelectorAll('.materia').forEach(m => {
+    const materias = document.querySelectorAll('.materia');
+
+    function actualizarEstado() {
+      materias.forEach(m => {
+        const correlativas = m.dataset.correlativas;
+        if (correlativas) {
+          const requisitos = correlativas.split(',');
+          const habilitada = requisitos.every(reqId => {
+            const req = document.querySelector(`.materia[data-id="${reqId}"]`);
+            return req && req.classList.contains('completada');
+          });
+          if (habilitada) {
+            m.classList.remove('bloqueada');
+          }
+        }
+      });
+    }
+
+    materias.forEach(m => {
       m.addEventListener('click', () => {
+        if (m.classList.contains('bloqueada')) return;
         m.classList.toggle('completada');
+        actualizarEstado();
       });
     });
   </script>
