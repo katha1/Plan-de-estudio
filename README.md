@@ -9,6 +9,6 @@ Además, tu progreso se guarda en tu dispositivo 💾, así no tenés que remarc
 
 Dejo el link aquí para que puedan abrirla directamente 🔗:
 
-[Link a la página](aquí_ponés_el_link)
+[Link a la página](https://katha1.github.io/Plan-de-estudio/)
 
 ¡Saludos! 👋
